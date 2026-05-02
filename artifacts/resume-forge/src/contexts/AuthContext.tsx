@@ -8,11 +8,7 @@ interface AuthContextType {
   loading: boolean;
   signInWithEmail: (email: string, password: string) => Promise<{ error: AuthError | null }>;
   signUpWithEmail: (email: string, password: string) => Promise<{ error: AuthError | null }>;
-  signInWithGoogle: () => Promise<{ error: AuthError | null }>;
-  signInWithFacebook: () => Promise<{ error: AuthError | null }>;
-  signInWithTwitter: () => Promise<{ error: AuthError | null }>;
-  signInWithPhone: (phone: string) => Promise<{ error: AuthError | null }>;
-  verifyOtp: (phone: string, token: string) => Promise<{ error: AuthError | null }>;
+  forgotPassword: (email: string) => Promise<{ error: AuthError | null }>;
   signOut: () => Promise<void>;
 }
 
@@ -59,37 +55,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { error };
   };
 
-  const signInWithGoogle = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: getRedirectUrl() },
+  const forgotPassword = async (email: string) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: getRedirectUrl(),
     });
-    return { error };
-  };
-
-  const signInWithFacebook = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "facebook",
-      options: { redirectTo: getRedirectUrl() },
-    });
-    return { error };
-  };
-
-  const signInWithTwitter = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "twitter",
-      options: { redirectTo: getRedirectUrl() },
-    });
-    return { error };
-  };
-
-  const signInWithPhone = async (phone: string) => {
-    const { error } = await supabase.auth.signInWithOtp({ phone });
-    return { error };
-  };
-
-  const verifyOtp = async (phone: string, token: string) => {
-    const { error } = await supabase.auth.verifyOtp({ phone, token, type: "sms" });
     return { error };
   };
 
@@ -100,10 +69,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   return (
     <AuthContext.Provider value={{
       user, session, loading,
-      signInWithEmail, signUpWithEmail,
-      signInWithGoogle, signInWithFacebook, signInWithTwitter,
-      signInWithPhone, verifyOtp,
-      signOut,
+      signInWithEmail, signUpWithEmail, forgotPassword, signOut,
     }}>
       {children}
     </AuthContext.Provider>
