@@ -6,6 +6,11 @@ import { downloadAsPDF } from "@/lib/pdf";
 
 type Mode = "optimize" | "roast" | "cover-letter" | null;
 
+const QUOTA_MSG = "AI is currently busy. Please try again in a minute.";
+function isQuotaError(msg: string) {
+  return msg.toLowerCase().includes("busy") || msg.toLowerCase().includes("quota") || msg.toLowerCase().includes("rate");
+}
+
 const SAMPLE_RESUME = `John Smith
 john.smith@email.com | LinkedIn: linkedin.com/in/johnsmith | GitHub: github.com/johnsmith
 
@@ -59,7 +64,7 @@ export default function Dashboard() {
       setResult(output);
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : "Something went wrong. Please try again.";
-      setError(`AI Error: ${msg}`);
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -157,24 +162,47 @@ export default function Dashboard() {
 
         {/* Error */}
         <AnimatePresence>
-          {error && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              className="mb-6 flex items-start gap-3 bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3"
-            >
-              <svg className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <p className="text-red-300 text-sm">{error}</p>
-              <button onClick={() => setError("")} className="ml-auto text-red-400 hover:text-red-300">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </motion.div>
-          )}
+          {error && (() => {
+            const isQuota = isQuotaError(error);
+            return (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className={`mb-6 flex items-start gap-3 rounded-xl px-4 py-3 ${
+                  isQuota
+                    ? "bg-amber-500/10 border border-amber-500/30"
+                    : "bg-red-500/10 border border-red-500/30"
+                }`}
+              >
+                {isQuota ? (
+                  <svg className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                ) : (
+                  <svg className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                )}
+                <div className="flex-1 min-w-0">
+                  <p className={`text-sm ${isQuota ? "text-amber-300" : "text-red-300"}`}>{error}</p>
+                  {isQuota && (
+                    <button
+                      onClick={() => { setError(""); if (activeMode) document.getElementById(`btn-${activeMode}`)?.click(); }}
+                      className="mt-2 text-xs text-amber-400 hover:text-amber-300 underline underline-offset-2 transition-colors"
+                    >
+                      Try again
+                    </button>
+                  )}
+                </div>
+                <button onClick={() => setError("")} className={`flex-shrink-0 ${isQuota ? "text-amber-400 hover:text-amber-300" : "text-red-400 hover:text-red-300"} transition-colors`}>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </motion.div>
+            );
+          })()}
         </AnimatePresence>
 
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
@@ -244,6 +272,7 @@ export default function Dashboard() {
               {modeButtons.map((btn) => (
                 <button
                   key={btn.mode}
+                  id={`btn-${btn.mode}`}
                   onClick={btn.onClick}
                   disabled={loading}
                   className={`flex flex-col sm:flex-row items-center justify-center gap-1.5 px-3 py-3 rounded-xl text-white text-xs sm:text-sm font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-br ${btn.gradient} hover:scale-105 hover:shadow-lg active:scale-95 ${
@@ -319,7 +348,7 @@ export default function Dashboard() {
                         {activeMode === "roast" && "Roasting your resume..."}
                         {activeMode === "cover-letter" && "Generating cover letter..."}
                       </p>
-                      <p className="text-muted-foreground text-sm">Analyzing and optimizing your resume...</p>
+                      <p className="text-muted-foreground text-sm">This usually takes 10–20 seconds.</p>
                     </div>
                     <div className="flex gap-1 mt-2">
                       {[0, 1, 2].map((i) => (

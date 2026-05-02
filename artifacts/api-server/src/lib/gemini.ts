@@ -2,109 +2,147 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const MODEL = "gemini-2.0-flash";
 
+/** Hard caps to keep token usage low */
+const MAX_RESUME_CHARS = 2500;
+const MAX_JD_CHARS = 1000;
+
+/** Retry config for 429 / RESOURCE_EXHAUSTED */
+const MAX_RETRIES = 2;
+const RETRY_DELAYS_MS = [8000, 20000]; // 8 s, then 20 s
+
 function getClient(): GoogleGenerativeAI {
   const apiKey = process.env["GEMINI_API_KEY"];
-  if (!apiKey) {
-    throw new Error("GEMINI_API_KEY environment variable is not set.");
-  }
+  if (!apiKey) throw new Error("GEMINI_API_KEY environment variable is not set.");
   return new GoogleGenerativeAI(apiKey);
 }
 
+function isRateLimit(err: unknown): boolean {
+  if (!(err instanceof Error)) return false;
+  const m = err.message.toLowerCase();
+  return (
+    m.includes("429") ||
+    m.includes("quota") ||
+    m.includes("resource_exhausted") ||
+    m.includes("rate limit") ||
+    m.includes("too many requests")
+  );
+}
+
+function trim(text: string, maxChars: number): string {
+  if (text.length <= maxChars) return text;
+  return text.slice(0, maxChars) + "\n[truncated for length]";
+}
+
 async function generate(prompt: string): Promise<string> {
-  const genAI = getClient();
-  const model = genAI.getGenerativeModel({ model: MODEL });
-  const result = await model.generateContent(prompt);
-  const response = result.response;
-  return response.text();
+  const model = getClient().getGenerativeModel({
+    model: MODEL,
+    generationConfig: {
+      maxOutputTokens: 800,
+      temperature: 0.7,
+    },
+  });
+
+  let lastErr: unknown;
+
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      const result = await model.generateContent(prompt);
+      return result.response.text();
+    } catch (err) {
+      lastErr = err;
+      if (isRateLimit(err) && attempt < MAX_RETRIES) {
+        await new Promise((r) => setTimeout(r, RETRY_DELAYS_MS[attempt]));
+        continue;
+      }
+      break;
+    }
+  }
+
+  if (isRateLimit(lastErr)) {
+    throw new Error("QUOTA_EXCEEDED");
+  }
+  throw lastErr;
 }
 
 export async function optimizeResume(resume: string, jobDescription: string): Promise<string> {
-  const prompt = `You are a professional ATS resume optimizer.
+  const r = trim(resume, MAX_RESUME_CHARS);
+  const j = trim(jobDescription, MAX_JD_CHARS) || "General professional role";
 
-TASK:
-- Rewrite the resume professionally
-- Improve ATS keywords relevant to the job description
-- Rewrite bullet points with strong action verbs and quantified achievements
-- Increase recruiter readability and scannability
-- Add stronger impact metrics and results
-- Tailor the resume specifically for the provided job description
+  const prompt = `You are an expert ATS resume optimizer. Rewrite the resume below to:
+- Use strong action verbs and quantified achievements
+- Insert relevant keywords for the job description
+- Improve scannability with clear section headers
+- Be concise and recruiter-ready
 
 RESUME:
-${resume}
+${r}
 
 JOB DESCRIPTION:
-${jobDescription || "General professional role — optimize for broad ATS compatibility"}
+${j}
 
-Return a complete, polished ATS-optimized resume. Use clear section headers, consistent formatting, and strong professional language. Do not include any commentary — return only the resume text.`;
+Return only the rewritten resume text. No commentary.`;
 
   return generate(prompt);
 }
 
 export async function roastResume(resume: string, jobDescription: string): Promise<string> {
-  const prompt = `You are a brutally honest senior recruiter and ATS expert with 15 years of experience.
+  const r = trim(resume, MAX_RESUME_CHARS);
+  const j = trim(jobDescription, MAX_JD_CHARS) || "General professional role";
 
-Analyze this resume like you're deciding in 10 seconds whether to move forward.
+  const prompt = `You are a senior recruiter and ATS expert. Analyze this resume brutally and concisely.
 
 RESUME:
-${resume}
+${r}
 
 JOB DESCRIPTION:
-${jobDescription || "General professional role"}
+${j}
 
-Provide a detailed, no-fluff analysis with these exact sections:
+Reply with these sections only — keep each section brief:
 
 **ATS SCORE: [X/100]**
-[One sentence explaining the score]
+One sentence reason.
 
-**BIGGEST WEAKNESSES**
-[List the top 3-5 critical problems]
+**TOP 3 WEAKNESSES**
+- [weakness]
 
 **MISSING KEYWORDS**
-[List specific keywords missing for this role]
+- [keyword]
 
 **WEAK BULLET POINTS**
-[Quote the weakest bullets and explain why they fail]
+Quote the worst 2 bullets and explain why.
 
-**RECRUITER RED FLAGS**
-[List specific concerns a recruiter would have]
+**TOP 5 FIXES (Priority Order)**
+1. [fix]
+2. [fix]
+3. [fix]
+4. [fix]
+5. [fix]
 
-**FORMATTING ISSUES**
-[List any structural or formatting problems]
-
-**TOP 5 IMPROVEMENTS (Priority Order)**
-1. [Most impactful fix]
-2. [Second fix]
-3. [Third fix]
-4. [Fourth fix]
-5. [Fifth fix]
-
-Be specific, direct, and actionable. No fluff.`;
+Be direct and specific. No filler.`;
 
   return generate(prompt);
 }
 
 export async function generateCoverLetter(resume: string, jobDescription: string): Promise<string> {
-  const prompt = `You are a professional career coach and expert cover letter writer.
+  const r = trim(resume, MAX_RESUME_CHARS);
+  const j = trim(jobDescription, MAX_JD_CHARS) || "General professional role";
 
-Generate a compelling, tailored cover letter using the information below.
+  const prompt = `Write a concise, compelling cover letter based on the resume and job below.
 
 RESUME:
-${resume}
+${r}
 
 JOB DESCRIPTION:
-${jobDescription || "General professional role"}
+${j}
 
 Requirements:
-- Strong, attention-grabbing opening hook (not "I am writing to apply for...")
-- Professional and confident tone throughout
-- 3-4 focused paragraphs — short and punchy, not verbose
-- Highlight the most relevant 2-3 experiences from the resume
-- Clear value proposition: what you bring to the company
-- Specific reference to the company/role (not generic)
-- Compelling closing with a clear call to action
-- Ready to send — no placeholders like [Your Name] — use context from the resume
+- 3 tight paragraphs, no filler
+- Strong opening hook (not "I am writing to apply")
+- Highlight 2 relevant experiences with impact
+- Clear value proposition and confident closing
+- Use context from the resume — no placeholders
 
-Return only the cover letter text, no commentary.`;
+Return only the cover letter text.`;
 
   return generate(prompt);
 }
