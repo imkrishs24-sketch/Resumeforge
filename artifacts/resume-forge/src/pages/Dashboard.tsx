@@ -32,6 +32,33 @@ B.S. Computer Science | State University | 2019
 SKILLS
 JavaScript, React, CSS, HTML, SQL, Git`;
 
+const LOADING_SEQUENCES: Record<NonNullable<Mode>, string[]> = {
+  optimize: [
+    "Analyzing your resume...",
+    "Identifying improvement areas...",
+    "Inserting ATS keywords...",
+    "Polishing action verbs...",
+    "Finalizing optimized resume...",
+    "Almost there...",
+  ],
+  roast: [
+    "Scanning your resume...",
+    "Running ATS analysis...",
+    "Identifying weaknesses...",
+    "Scoring your resume...",
+    "Compiling feedback...",
+    "Almost there...",
+  ],
+  "cover-letter": [
+    "Reading your experience...",
+    "Crafting your opening...",
+    "Highlighting key achievements...",
+    "Writing closing statement...",
+    "Polishing cover letter...",
+    "Almost there...",
+  ],
+};
+
 export default function Dashboard() {
   const [, navigate] = useLocation();
   const [resume, setResume] = useState("");
@@ -41,6 +68,8 @@ export default function Dashboard() {
   const [activeMode, setActiveMode] = useState<Mode>(null);
   const [error, setError] = useState("");
   const [resultTitle, setResultTitle] = useState("");
+  const [loadingStatus, setLoadingStatus] = useState("");
+  const [loadingStep, setLoadingStep] = useState(0);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -59,6 +88,17 @@ export default function Dashboard() {
     setActiveMode(mode);
     setResult("");
     setResultTitle(title);
+    setLoadingStep(0);
+
+    const sequence = LOADING_SEQUENCES[mode!];
+    setLoadingStatus(sequence[0]);
+    let step = 0;
+    const interval = setInterval(() => {
+      step = Math.min(step + 1, sequence.length - 1);
+      setLoadingStep(step);
+      setLoadingStatus(sequence[step]);
+    }, 4000);
+
     try {
       const output = await fn();
       setResult(output);
@@ -66,7 +106,10 @@ export default function Dashboard() {
       const msg = e instanceof Error ? e.message : "Something went wrong. Please try again.";
       setError(msg);
     } finally {
+      clearInterval(interval);
       setLoading(false);
+      setLoadingStatus("");
+      setLoadingStep(0);
     }
   };
 
@@ -343,19 +386,29 @@ export default function Dashboard() {
                       </div>
                     </div>
                     <div className="text-center">
-                      <p className="text-white font-medium mb-1">
-                        {activeMode === "optimize" && "Optimizing your resume..."}
-                        {activeMode === "roast" && "Roasting your resume..."}
-                        {activeMode === "cover-letter" && "Generating cover letter..."}
-                      </p>
-                      <p className="text-muted-foreground text-sm">This usually takes 10–20 seconds.</p>
+                      <AnimatePresence mode="wait">
+                        <motion.p
+                          key={loadingStatus}
+                          initial={{ opacity: 0, y: 6 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -6 }}
+                          transition={{ duration: 0.3 }}
+                          className="text-white font-medium mb-1"
+                        >
+                          {loadingStatus}
+                        </motion.p>
+                      </AnimatePresence>
+                      <p className="text-muted-foreground text-sm">Usually 10–30 seconds</p>
                     </div>
-                    <div className="flex gap-1 mt-2">
-                      {[0, 1, 2].map((i) => (
+                    <div className="flex gap-2 mt-2 items-center">
+                      {(activeMode ? LOADING_SEQUENCES[activeMode] : []).map((_, i) => (
                         <div
                           key={i}
-                          className="w-2 h-2 rounded-full bg-violet-500 animate-bounce"
-                          style={{ animationDelay: `${i * 0.15}s` }}
+                          className={`rounded-full transition-all duration-500 ${
+                            i <= loadingStep
+                              ? "w-2 h-2 bg-violet-500"
+                              : "w-1.5 h-1.5 bg-violet-500/20"
+                          }`}
                         />
                       ))}
                     </div>

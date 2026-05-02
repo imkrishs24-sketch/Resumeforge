@@ -134,6 +134,20 @@
   }
 }
 
+/* Hide Replit environment badges and overlays */
+[data-replit-badge],
+[class*="replit-badge"],
+[class*="replit-ui-theme-root"] > [style*="position: fixed"],
+iframe[src*="replit.com/badge"],
+a[href*="replit.com"][style*="position: fixed"],
+a[href*="replit.com"][style*="position:fixed"],
+div[style*="z-index: 9999"][style*="position: fixed"]:not(#root):not([class]) {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
 @keyframes gradient-shift {
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
