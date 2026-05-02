@@ -1,12 +1,12 @@
 const API_URL = "https://openrouter.ai/api/v1/chat/completions";
 
 const MODELS = [
-  "meta-llama/llama-3.1-8b-instruct:free",
+  "deepseek/deepseek-chat",
   "mistralai/mistral-7b-instruct:free",
+  "meta-llama/llama-3.1-8b-instruct:free",
   "google/gemma-2-9b-it:free",
   "qwen/qwen-2.5-7b-instruct:free",
   "microsoft/phi-3-mini-128k-instruct:free",
-  "openchat/openchat-7b:free",
   "nousresearch/hermes-2-pro-llama-3-8b:free",
 ];
 
