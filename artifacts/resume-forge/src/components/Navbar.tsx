@@ -25,21 +25,21 @@ export default function Navbar() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? "glass border-b border-white/5" : "bg-transparent"
+        scrolled ? "bg-[#0B0F19]/80 backdrop-blur-xl border-b border-white/[0.05]" : "bg-transparent"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <button
             onClick={() => navigate("/")}
-            className="flex items-center gap-2 group"
+            className="flex items-center gap-2.5 group"
           >
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-purple-700 flex items-center justify-center glow-purple-sm">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500 to-purple-700 flex items-center justify-center">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
                 <path d="M3 2h10v2H3V2zM3 6h10v2H3V6zM3 10h6v2H3v-2z" fill="white" />
               </svg>
             </div>
-            <span className="font-bold text-lg text-white tracking-tight">
+            <span className="font-bold text-base text-white tracking-tight">
               Resume<span className="gradient-text-purple">Forge</span>
             </span>
           </button>
@@ -54,7 +54,7 @@ export default function Navbar() {
               <button
                 key={item.id}
                 onClick={() => scrollTo(item.id)}
-                className="text-sm text-muted-foreground hover:text-white transition-colors duration-200"
+                className="text-sm text-white/40 hover:text-white transition-colors duration-200"
               >
                 {item.label}
               </button>
@@ -64,25 +64,23 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-3">
             <button
               onClick={() => navigate("/dashboard")}
-              className="text-sm text-muted-foreground hover:text-white transition-colors px-4 py-2"
+              className="text-sm font-medium bg-violet-600 hover:bg-violet-500 text-white px-4 py-2 rounded-lg transition-all duration-200 hover:scale-[1.02]"
             >
-              Sign In
-            </button>
-            <button
-              onClick={() => navigate("/dashboard")}
-              className="text-sm font-medium bg-violet-600 hover:bg-violet-500 text-white px-4 py-2 rounded-lg transition-all duration-200 glow-purple-sm hover:scale-105"
-            >
-              Start Free
+              Get Started
             </button>
           </div>
 
           <button
-            className="md:hidden text-white p-2"
+            className="md:hidden text-white/60 hover:text-white p-1 transition-colors"
             onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Toggle menu"
           >
-            <div className="w-5 h-0.5 bg-white mb-1 transition-all" />
-            <div className="w-5 h-0.5 bg-white mb-1 transition-all" />
-            <div className="w-5 h-0.5 bg-white transition-all" />
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {menuOpen
+                ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              }
+            </svg>
           </button>
         </div>
       </div>
@@ -93,9 +91,9 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden glass border-t border-white/5"
+            className="md:hidden bg-[#0B0F19]/95 backdrop-blur-xl border-t border-white/[0.05]"
           >
-            <div className="px-4 py-4 space-y-3">
+            <div className="px-4 py-5 space-y-1">
               {[
                 { label: "Features", id: "features" },
                 { label: "How it Works", id: "how-it-works" },
@@ -105,17 +103,19 @@ export default function Navbar() {
                 <button
                   key={item.id}
                   onClick={() => scrollTo(item.id)}
-                  className="block w-full text-left text-sm text-muted-foreground hover:text-white py-2 transition-colors"
+                  className="block w-full text-left text-sm text-white/50 hover:text-white py-2.5 transition-colors"
                 >
                   {item.label}
                 </button>
               ))}
-              <button
-                onClick={() => { setMenuOpen(false); navigate("/dashboard"); }}
-                className="w-full text-sm font-medium bg-violet-600 hover:bg-violet-500 text-white px-4 py-2.5 rounded-lg transition-all duration-200 mt-2"
-              >
-                Start Free
-              </button>
+              <div className="pt-3 border-t border-white/[0.05]">
+                <button
+                  onClick={() => { setMenuOpen(false); navigate("/dashboard"); }}
+                  className="w-full text-sm font-medium bg-violet-600 hover:bg-violet-500 text-white px-4 py-3 rounded-lg transition-all duration-200 mt-1"
+                >
+                  Get Started
+                </button>
+              </div>
             </div>
           </motion.div>
         )}

@@ -139,12 +139,7 @@ export default function Dashboard() {
               Resume<span className="gradient-text-purple">Forge</span>
             </span>
           </button>
-          <div className="flex items-center gap-2">
-            <span className="hidden sm:flex items-center gap-1.5 text-xs text-violet-300 bg-violet-600/10 border border-violet-500/20 px-2.5 py-1 rounded-full">
-              <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse" />
-              Gemini 2.0 Flash
-            </span>
-          </div>
+          <div className="flex items-center gap-2" />
         </div>
       </div>
 
@@ -324,7 +319,7 @@ export default function Dashboard() {
                         {activeMode === "roast" && "Roasting your resume..."}
                         {activeMode === "cover-letter" && "Generating cover letter..."}
                       </p>
-                      <p className="text-muted-foreground text-sm">Gemini 2.0 Flash is working its magic</p>
+                      <p className="text-muted-foreground text-sm">Analyzing and optimizing your resume...</p>
                     </div>
                     <div className="flex gap-1 mt-2">
                       {[0, 1, 2].map((i) => (
