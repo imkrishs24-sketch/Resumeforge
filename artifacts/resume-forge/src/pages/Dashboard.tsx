@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
 import { optimizeResume, roastResume, generateCoverLetter } from "@/lib/api";
 import { downloadAsPDF } from "@/lib/pdf";
+import UploadZone from "@/components/UploadZone";
 
 type Mode = "optimize" | "roast" | "cover-letter" | null;
 
@@ -272,11 +273,12 @@ export default function Dashboard() {
                   Load Sample
                 </button>
               </div>
+              <UploadZone accent="violet" onExtracted={(text) => setResume(text)} />
               <textarea
                 value={resume}
                 onChange={(e) => setResume(e.target.value)}
-                placeholder="Paste your resume here... (plain text works best)"
-                rows={14}
+                placeholder="Paste your resume here, or upload a file above..."
+                rows={12}
                 className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-muted-foreground/50 resize-none focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/30 transition-all scrollbar-thin"
               />
               <p className="text-xs text-muted-foreground mt-2">{resume.length} characters</p>
@@ -296,11 +298,12 @@ export default function Dashboard() {
                 Job Description
                 <span className="text-xs text-muted-foreground font-normal">(optional but recommended)</span>
               </label>
+              <UploadZone accent="blue" onExtracted={(text) => setJobDescription(text)} />
               <textarea
                 value={jobDescription}
                 onChange={(e) => setJobDescription(e.target.value)}
-                placeholder="Paste the job description here for better results..."
-                rows={7}
+                placeholder="Paste the job description here, or upload a file above..."
+                rows={6}
                 className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-muted-foreground/50 resize-none focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/30 transition-all scrollbar-thin"
               />
             </motion.div>
