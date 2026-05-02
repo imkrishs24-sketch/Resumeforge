@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { optimizeResume, roastResume, generateCoverLetter } from "../lib/gemini";
+import { optimizeResume, roastResume, generateCoverLetter } from "../lib/openrouter";
 
 const router = Router();
 
