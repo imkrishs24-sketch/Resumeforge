@@ -122,15 +122,15 @@ const testimonials = [
 const faqs = [
   {
     q: "Is ResumeForge AI really free?",
-    a: "Yes, completely free. We use Puter.js which provides free access to Gemini AI. No credit card, no subscription, no hidden fees.",
+    a: "Yes, completely free. We use the Google Gemini API on the free tier. No credit card, no subscription, no hidden fees.",
   },
   {
     q: "Which AI model does ResumeForge use?",
-    a: "We use Google's Gemini 2.5 Flash model through the Puter.js platform — one of the most capable AI models available, completely free.",
+    a: "We use Google's Gemini 2.0 Flash model — one of the most capable and fastest AI models available, running securely on our backend.",
   },
   {
     q: "Is my resume data private?",
-    a: "Your resume data is processed through Puter.js AI and is not stored on our servers. We recommend not including sensitive personal information like your SSN.",
+    a: "Your resume is sent to the Google Gemini API for processing and is not stored on our servers. We recommend not including sensitive personal information like your SSN.",
   },
   {
     q: "How accurate is the ATS scoring?",
@@ -212,7 +212,7 @@ export default function LandingPage() {
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-light text-sm text-violet-300 mb-8 border border-violet-500/20"
           >
             <span className="w-2 h-2 rounded-full bg-violet-400 animate-pulse" />
-            Powered by Gemini 2.5 Flash — 100% Free
+            Powered by Gemini 2.0 Flash — 100% Free
           </motion.div>
 
           <motion.h1
@@ -393,10 +393,10 @@ export default function LandingPage() {
                 <span className="inline-block text-violet-400 text-sm font-medium mb-3 tracking-wider uppercase">AI Capabilities</span>
                 <h2 className="text-4xl font-bold text-white mb-6 leading-tight">
                   Powered by<br />
-                  <span className="gradient-text-purple">Gemini 2.5 Flash</span>
+                  <span className="gradient-text-purple">Gemini 2.0 Flash</span>
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-8">
-                  ResumeForge uses Google's most capable AI model through Puter.js — giving you enterprise-grade AI resume optimization completely free.
+                  ResumeForge uses Google's Gemini 2.0 Flash model via a secure backend API — giving you enterprise-grade AI resume optimization completely free.
                 </p>
                 <ul className="space-y-3">
                   {[
@@ -431,14 +431,14 @@ export default function LandingPage() {
                   <span className="ml-2 text-muted-foreground text-xs">ai-optimizer.ts</span>
                 </div>
                 <div className="space-y-1 text-xs">
-                  <p><span className="text-violet-400">const</span> <span className="text-blue-300">response</span> <span className="text-white">=</span> <span className="text-yellow-300">await</span> <span className="text-white">puter.ai.chat(</span></p>
-                  <p className="pl-4"><span className="text-green-300">prompt</span><span className="text-white">,</span> <span className="text-white">{"{"}</span></p>
-                  <p className="pl-8"><span className="text-blue-300">model</span><span className="text-white">:</span> <span className="text-orange-300">"gemini-2.5-flash"</span></p>
-                  <p className="pl-4"><span className="text-white">{"}"}</span></p>
-                  <p><span className="text-white">);</span></p>
-                  <p className="mt-3 text-muted-foreground text-xs">// ✅ Free AI. No API key. No cost.</p>
-                  <p className="text-muted-foreground text-xs">// ✅ Powered by Puter.js</p>
-                  <p className="text-muted-foreground text-xs">// ✅ Gemini 2.5 Flash model</p>
+                  <p><span className="text-violet-400">const</span> <span className="text-blue-300">model</span> <span className="text-white">=</span> <span className="text-yellow-300">genAI</span><span className="text-white">.getGenerativeModel({"{"}</span></p>
+                  <p className="pl-4"><span className="text-blue-300">model</span><span className="text-white">:</span> <span className="text-orange-300">"gemini-2.0-flash"</span></p>
+                  <p><span className="text-white">{"}"});"</span></p>
+                  <p className="mt-1"><span className="text-violet-400">const</span> <span className="text-blue-300">result</span> <span className="text-white">=</span> <span className="text-yellow-300">await</span></p>
+                  <p className="pl-4"><span className="text-blue-300">model</span><span className="text-white">.generateContent(</span><span className="text-green-300">prompt</span><span className="text-white">);</span></p>
+                  <p className="mt-3 text-muted-foreground text-xs">// ✅ Secure server-side API call</p>
+                  <p className="text-muted-foreground text-xs">// ✅ Google Gemini 2.0 Flash</p>
+                  <p className="text-muted-foreground text-xs">// ✅ No key exposed to browser</p>
                 </div>
               </motion.div>
             </div>
@@ -529,7 +529,7 @@ export default function LandingPage() {
             <span className="font-bold text-white">ResumeForge AI</span>
           </div>
           <p className="text-muted-foreground text-sm">
-            Powered by <span className="text-violet-400">Puter.js</span> & Gemini 2.5 Flash. Free forever.
+            Powered by <span className="text-violet-400">Google Gemini 2.0 Flash</span>. Free forever.
           </p>
         </div>
       </footer>

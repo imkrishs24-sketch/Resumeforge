@@ -44,17 +44,9 @@ export default function Dashboard() {
     }
   }, []);
 
-  const isPuterAvailable = () => {
-    return typeof window !== "undefined" && window.puter && window.puter.ai;
-  };
-
   const runAction = async (mode: Mode, fn: () => Promise<string>, title: string) => {
     if (!resume.trim()) {
       setError("Please paste your resume first.");
-      return;
-    }
-    if (!isPuterAvailable()) {
-      setError("Puter.js is loading. Please wait a moment and try again.");
       return;
     }
     setError("");
@@ -150,7 +142,7 @@ export default function Dashboard() {
           <div className="flex items-center gap-2">
             <span className="hidden sm:flex items-center gap-1.5 text-xs text-violet-300 bg-violet-600/10 border border-violet-500/20 px-2.5 py-1 rounded-full">
               <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse" />
-              Gemini 2.5 Flash
+              Gemini 2.0 Flash
             </span>
           </div>
         </div>
@@ -332,7 +324,7 @@ export default function Dashboard() {
                         {activeMode === "roast" && "Roasting your resume..."}
                         {activeMode === "cover-letter" && "Generating cover letter..."}
                       </p>
-                      <p className="text-muted-foreground text-sm">Gemini 2.5 Flash is working its magic</p>
+                      <p className="text-muted-foreground text-sm">Gemini 2.0 Flash is working its magic</p>
                     </div>
                     <div className="flex gap-1 mt-2">
                       {[0, 1, 2].map((i) => (
