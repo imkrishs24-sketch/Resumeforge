@@ -25,3 +25,27 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 - `pnpm --filter @workspace/api-server run dev` — run API server locally
 
 See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details.
+
+## Artifacts
+
+### ResumeForge AI (`artifacts/resume-forge`)
+
+AI-powered resume optimization SaaS. Premium dark UI (glassmorphism, Framer Motion).
+
+**Pages:**
+- `/` — Landing page (hero, features, testimonials, FAQ)
+- `/dashboard` — AI resume tools dashboard
+
+**Features:**
+- Resume optimization via Gemini AI
+- ATS resume roast/scoring
+- Cover letter generation
+- PDF export (jsPDF)
+
+**AI Integration:**
+- Backend routes in `artifacts/api-server/src/routes/ai.ts`
+- Gemini utility in `artifacts/api-server/src/lib/gemini.ts`
+- Model: `gemini-2.0-flash`
+- Requires `GEMINI_API_KEY` secret (set in Replit Secrets)
+- Frontend calls: `/api/optimize`, `/api/roast`, `/api/cover-letter`
+- Frontend API client: `artifacts/resume-forge/src/lib/api.ts`

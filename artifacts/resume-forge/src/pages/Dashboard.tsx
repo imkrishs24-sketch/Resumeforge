@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
-import { optimizeResume, roastResume, generateCoverLetter } from "@/lib/puter";
+import { optimizeResume, roastResume, generateCoverLetter } from "@/lib/api";
 import { downloadAsPDF } from "@/lib/pdf";
 
 type Mode = "optimize" | "roast" | "cover-letter" | null;
