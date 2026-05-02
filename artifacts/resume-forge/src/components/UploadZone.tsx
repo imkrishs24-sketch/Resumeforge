@@ -157,11 +157,15 @@ export default function UploadZone({ onExtracted, accent }: Props) {
               </div>
               <div className="flex-1 min-w-0">
                 {state === "error" ? (
-                  <p className="text-xs text-red-400">{errorMsg}</p>
+                  <p className="text-xs text-red-400 leading-snug">{errorMsg}</p>
                 ) : (
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-muted-foreground leading-snug">
                     <span className={`font-medium ${a.icon}`}>Upload file</span>
-                    {" "}or drag & drop — PDF, DOCX, TXT, image, XLSX, CSV
+                    <span className="hidden sm:inline"> or drag & drop</span>
+                    <span className="sm:hidden"> </span>
+                    <span className="text-white/20 mx-1 hidden sm:inline">—</span>
+                    <span className="hidden sm:inline">PDF, DOCX, TXT, image, XLSX, CSV</span>
+                    <span className="sm:hidden text-white/40">PDF, DOCX, TXT…</span>
                   </p>
                 )}
               </div>

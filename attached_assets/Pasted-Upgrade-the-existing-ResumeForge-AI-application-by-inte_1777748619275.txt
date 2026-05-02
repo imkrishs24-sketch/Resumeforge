@@ -1,0 +1,309 @@
+Upgrade the existing ResumeForge AI application by integrating ResumeBuilder.com-inspired template browsing and example systems directly into the website.
+
+IMPORTANT:
+DO NOT redesign the UI.
+DO NOT change:
+- colors
+- theme
+- branding
+- glassmorphism style
+- dark aesthetic
+- animations
+- layout style
+
+Keep the current UI exactly the same visually.
+
+ONLY ADD:
+- template gallery
+- resume examples
+- template previews
+- template switching
+- example resume integration
+- better UX
+
+REFERENCE:
+Study ResumeBuilder.com functionality and replicate its workflow/features WITHOUT copying copyrighted assets or changing the current design.
+
+INSPIRED FEATURES TO IMPLEMENT:
+- resume templates
+- “Use This Template” buttons
+- example resumes
+- template preview cards
+- ATS-friendly badges
+- categorized templates
+- live resume preview
+- import resume flow
+
+==================================================
+1. ADD TEMPLATE GALLERY SECTION
+==================================================
+
+Create a new responsive section:
+"Resume Templates"
+
+DISPLAY:
+- modern template cards
+- template thumbnails/mock previews
+- ATS-friendly badge
+- category label
+- short description
+- “Use Template” button
+
+TEMPLATE CATEGORIES:
+- Modern
+- Minimal
+- Professional
+- Executive
+- Creative
+- ATS-Friendly
+- Student
+- Software Engineer
+- Corporate
+- Elegant
+
+IMPORTANT:
+Generate preview templates using HTML/CSS mock resume layouts.
+DO NOT use copyrighted screenshots from ResumeBuilder.com.
+
+LAYOUT:
+Desktop:
+- 3-4 templates per row
+
+Tablet:
+- 2 per row
+
+Mobile:
+- 1 per row
+
+USE:
+grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4
+
+Add:
+- horizontal template carousel
+- hover animation
+- smooth transitions
+- animated selection state
+
+==================================================
+2. SHOW TEMPLATES DIRECTLY ON WEBSITE
+==================================================
+
+IMPORTANT:
+Templates must be visible directly inside the website.
+
+Do NOT:
+- hide templates in modal only
+- use placeholders only
+
+Each template card should visually resemble:
+- real resume layouts
+- realistic typography
+- section spacing
+- professional formatting
+
+Include:
+- header
+- experience
+- education
+- skills
+- sidebar variations
+- minimal ATS-safe layouts
+
+==================================================
+3. “USE TEMPLATE” FUNCTIONALITY
+==================================================
+
+When user clicks:
+"Use Template"
+
+Automatically:
+- apply template to live preview
+- populate editable resume structure
+- preserve existing user data if available
+
+Add:
+- active template highlight
+- animated switching
+
+==================================================
+4. LIVE RESUME PREVIEW PANEL
+==================================================
+
+Add live updating preview panel.
+
+Desktop:
+- editor left
+- preview right
+
+Mobile:
+- stacked vertically
+
+FEATURES:
+- live updates while typing
+- template switching
+- realistic A4 layout
+- responsive scaling
+- print-friendly rendering
+
+==================================================
+5. ADD RESUME EXAMPLES SECTION
+==================================================
+
+Create:
+"Resume Examples"
+
+CATEGORIES:
+- Software Engineer
+- Data Analyst
+- Teacher
+- Nurse
+- Marketing
+- Project Manager
+- Customer Service
+- Accountant
+- Student
+- Sales
+
+Each example card should include:
+- mini preview
+- role title
+- short description
+- “Use Example” button
+
+When clicked:
+- autofill editor with realistic sample content
+
+==================================================
+6. ADD ATS SCORE WIDGET
+==================================================
+
+Create ATS analysis panel showing:
+- ATS score out of 100
+- keyword match
+- readability
+- formatting quality
+- recruiter friendliness
+
+VISUALS:
+- animated progress bars
+- circular score ring
+- modern analytics cards
+
+==================================================
+7. TEMPLATE CUSTOMIZATION
+==================================================
+
+Allow users to:
+- switch templates
+- change accent color
+- change font family
+- change spacing
+- toggle sections
+
+IMPORTANT:
+Maintain ATS-safe formatting.
+
+==================================================
+8. RESPONSIVENESS FIXES
+==================================================
+
+Fix responsiveness for:
+- features bar
+- template gallery
+- preview section
+- example cards
+- dashboard
+- navbar
+- buttons
+
+REQUIREMENTS:
+- no horizontal scrolling
+- responsive typography
+- mobile-friendly cards
+- proper stacking
+- touch-friendly controls
+
+ADD:
+overflow-x-hidden
+
+Typography:
+text-3xl sm:text-5xl lg:text-7xl
+
+Spacing:
+px-4 sm:px-6 lg:px-8
+
+==================================================
+9. FEATURES BAR RESPONSIVENESS
+==================================================
+
+Current issue:
+Features/navigation bar breaks on smaller screens.
+
+FIX:
+- responsive navbar
+- hamburger menu
+- mobile dropdown
+- proper spacing
+- prevent overlaps
+
+==================================================
+10. PREMIUM UX IMPROVEMENTS
+==================================================
+
+Add:
+- hover effects
+- loading skeletons
+- animated template switching
+- smooth transitions
+- polished empty states
+- modern card interactions
+
+==================================================
+11. KEEP EXISTING FEATURES
+==================================================
+
+Keep:
+- OpenRouter AI
+- multi-model fallback system
+- resume optimization
+- ATS roast
+- cover letter generation
+- upload parsing
+- OCR
+- PDF export
+- dark theme
+- animations
+
+==================================================
+12. IMPORTANT
+==================================================
+
+DO NOT:
+- redesign the website
+- change branding
+- remove current features
+- make UI lighter
+- change color palette
+
+ONLY:
+- enhance functionality
+- add ResumeBuilder-style features
+- add visible templates directly on website
+- improve responsiveness
+- improve UX
+
+Generate ALL updated files completely.
+
+Include:
+- reusable template components
+- mock template previews
+- example resume data
+- live preview system
+- responsive layouts
+- updated dashboard
+- all imports
+- all dependencies
+
+Ensure the app works immediately after:
+npm install
+npm run dev

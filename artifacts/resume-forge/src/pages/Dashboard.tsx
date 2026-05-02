@@ -212,12 +212,12 @@ export default function Dashboard() {
                   </h3>
                   <span className="text-xs text-muted-foreground">Click to load sample content</span>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-10 gap-2">
+                <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-thin">
                   {TEMPLATES.map(tpl => (
                     <button
                       key={tpl.id}
                       onClick={() => { setResume(tpl.sampleText); setActiveTemplateId(tpl.id); }}
-                      className={`group relative flex flex-col items-center gap-1.5 p-1.5 rounded-xl transition-all duration-200 ${
+                      className={`group relative flex-shrink-0 flex flex-col items-center gap-1.5 p-1.5 rounded-xl transition-all duration-200 w-[88px] ${
                         activeTemplateId === tpl.id
                           ? "bg-violet-600/20 ring-1 ring-violet-500/50"
                           : "hover:bg-white/[0.04]"
