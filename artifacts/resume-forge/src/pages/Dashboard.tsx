@@ -1,6 +1,7 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
+import { useAuth } from "@/contexts/AuthContext";
 import { optimizeResume, roastResume, generateCoverLetter } from "@/lib/api";
 import { downloadAsPDF } from "@/lib/pdf";
 import UploadZone from "@/components/UploadZone";
@@ -66,6 +67,9 @@ function ScoreBar({ label, value, color }: { label: string; value: number; color
 
 export default function Dashboard() {
   const [, navigate] = useLocation();
+  const { user, signOut } = useAuth();
+  const [profileOpen, setProfileOpen] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
   const [resume, setResume] = useState("");
   const [jobDescription, setJobDescription] = useState("");
   const [result, setResult] = useState("");
@@ -80,6 +84,16 @@ export default function Dashboard() {
   const [showTemplates, setShowTemplates] = useState(false);
 
   const atsScore = useMemo(() => scoreResume(resume), [resume]);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+        setProfileOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -164,6 +178,18 @@ export default function Dashboard() {
     },
   ];
 
+  const avatarLetter = user?.email?.[0]?.toUpperCase() ?? user?.phone?.[0] ?? "U";
+  const displayName = user?.user_metadata?.full_name ?? user?.email ?? user?.phone ?? "User";
+  const shortEmail = user?.email
+    ? user.email.length > 22 ? user.email.slice(0, 22) + "…" : user.email
+    : user?.phone ?? "";
+
+  const handleSignOut = async () => {
+    setProfileOpen(false);
+    await signOut();
+    navigate("/");
+  };
+
   return (
     <div className="min-h-screen bg-[#0B0F19] text-white">
       {/* Top Bar */}
@@ -183,6 +209,53 @@ export default function Dashboard() {
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" /></svg>
               Templates
             </button>
+
+            {/* User profile */}
+            <div className="relative" ref={profileRef}>
+              <button
+                onClick={() => setProfileOpen(s => !s)}
+                className="flex items-center gap-1.5 pl-1 pr-2 py-1 rounded-xl hover:bg-white/[0.06] border border-transparent hover:border-white/10 transition-all duration-200"
+              >
+                <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-xs font-bold text-white">
+                  {avatarLetter}
+                </div>
+                <svg className={`w-3 h-3 text-white/30 transition-transform duration-200 ${profileOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <AnimatePresence>
+                {profileOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -8, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -8, scale: 0.95 }}
+                    transition={{ duration: 0.15, ease: "easeOut" }}
+                    className="absolute top-full right-0 mt-2 w-52 bg-[#13172a] border border-white/10 rounded-2xl shadow-2xl shadow-black/60 overflow-hidden z-50"
+                  >
+                    <div className="px-4 py-3 border-b border-white/[0.06]">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-sm font-bold text-white flex-shrink-0">
+                          {avatarLetter}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-xs font-medium text-white truncate">{displayName}</p>
+                          <p className="text-xs text-white/40 truncate">{shortEmail}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="p-1.5 border-t border-white/[0.05]">
+                      <button onClick={handleSignOut}
+                        className="flex items-center gap-2 w-full px-3 py-2.5 rounded-xl text-sm text-red-400/80 hover:text-red-400 hover:bg-red-500/[0.08] transition-all duration-150">
+                        <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                        Sign Out
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
       </div>

@@ -155,11 +155,11 @@ export default function LandingPage() {
           </motion.p>
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.25 }}
             className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 max-w-xs sm:max-w-none mx-auto">
-            <button onClick={() => navigate("/dashboard")}
+            <button onClick={() => navigate("/auth")}
               className="px-8 py-3.5 bg-violet-600 hover:bg-violet-500 text-white font-semibold rounded-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] glow-purple text-base whitespace-nowrap">
               Start Optimizing
             </button>
-            <button onClick={() => navigate("/dashboard?mode=roast")}
+            <button onClick={() => navigate("/auth")}
               className="px-8 py-3.5 border border-white/10 hover:border-white/20 bg-white/[0.03] hover:bg-white/[0.06] text-white font-semibold rounded-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] text-base whitespace-nowrap">
               ATS Resume Roast
             </button>
@@ -436,7 +436,7 @@ export default function LandingPage() {
             <div className="relative">
               <h2 className="text-2xl sm:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4 tracking-tight">Ready to land your <span className="gradient-text">dream job?</span></h2>
               <p className="text-muted-foreground text-sm sm:text-base lg:text-lg mb-8 sm:mb-10 max-w-md mx-auto leading-relaxed">Join thousands of job seekers who transformed their resumes and interviews.</p>
-              <button onClick={() => navigate("/dashboard")}
+              <button onClick={() => navigate("/auth")}
                 className="px-8 sm:px-10 py-3.5 sm:py-4 bg-violet-600 hover:bg-violet-500 text-white font-bold rounded-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] glow-purple text-sm sm:text-base">
                 Start Optimizing
               </button>
