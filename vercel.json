@@ -1,6 +1,6 @@
 {
-  "framework": "vite",
-  "buildCommand": "pnpm run build",
+  "version": 2,
+  "buildCommand": "cd artifacts/resume-forge && pnpm install && pnpm run build",
   "outputDirectory": "artifacts/resume-forge/dist",
   "rewrites": [
     {
