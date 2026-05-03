@@ -9,11 +9,9 @@ const port = process.env.PORT
   ? Number(process.env.PORT)
   : 3000;
 
-// SAFE BASE PATH
-const basePath = process.env.BASE_PATH || "/";
-
 export default defineConfig({
-  base: basePath,
+  // IMPORTANT FOR VERCEL
+  base: "/",
 
   plugins: [
     react(),
@@ -54,9 +52,9 @@ export default defineConfig({
   root: path.resolve(import.meta.dirname),
 
   build: {
-  outDir: "dist",
-  emptyOutDir: true,
-},
+    outDir: "dist",
+    emptyOutDir: true,
+  },
 
   server: {
     port,
