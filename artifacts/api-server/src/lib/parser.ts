@@ -35,9 +35,9 @@ export async function parseUploadedFile(
     }
 
     if (ext === ".pdf") {
-      const pdfParse = (await import("pdf-parse")).default;
+      import * as pdf from "pdf-parse";
       const buf = await readFile(filePath);
-      const data = await pdfParse(buf);
+      const data = await pdf(buffer);
       const text = data.text?.trim();
       if (!text) throw new Error("PDF_EMPTY");
       return text;
