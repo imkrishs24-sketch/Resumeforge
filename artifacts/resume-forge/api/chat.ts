@@ -1,14 +1,13 @@
-import type { VercelRequest, VercelResponse } from "@vercel/node";
-
-const MODELS = [
-  "deepseek/deepseek-chat",
-  "meta-llama/llama-3.1-8b-instruct:free",
-  "mistralai/mistral-7b-instruct:free",
-];
-
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req: Request): Promise<Response> {
   try {
-    const { message } = req.body;
+    const body = await req.json();
+    const message = body.message;
+
+    const MODELS = [
+      "deepseek/deepseek-chat",
+      "meta-llama/llama-3.1-8b-instruct:free",
+      "mistralai/mistral-7b-instruct:free",
+    ];
 
     for (const model of MODELS) {
       try {
@@ -28,22 +27,27 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         const data = await response.json();
 
-        return res.status(200).json({
-          reply: data.choices?.[0]?.message?.content || "No response",
-        });
+        return new Response(
+          JSON.stringify({
+            reply: data.choices?.[0]?.message?.content || "No response",
+          }),
+          { status: 200 }
+        );
 
-      } catch (err) {
-        continue; // fallback to next model
+      } catch {
+        continue; // fallback
       }
     }
 
-    return res.status(500).json({
-      error: "All AI models failed. Try again later.",
-    });
+    return new Response(
+      JSON.stringify({ error: "All AI models failed. Try again." }),
+      { status: 500 }
+    );
 
-  } catch (err) {
-    return res.status(500).json({
-      error: "Something went wrong.",
-    });
+  } catch {
+    return new Response(
+      JSON.stringify({ error: "Invalid request" }),
+      { status: 400 }
+    );
   }
 }
